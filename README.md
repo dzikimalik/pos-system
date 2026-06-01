@@ -283,7 +283,43 @@ modern-pos-system/
 
 ## Screenshots
 
-> Screenshots will be added after deployment.
+<p align="center">
+  <img src="screenshots/dashboard.png" alt="Dashboard" width="700"/>
+  <br/>
+  <em>Dashboard — Ringkasan penjualan, produk terlaris, dan transaksi terbaru</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="screenshots/cashier.png" alt="Cashier / POS" width="700"/>
+  <br/>
+  <em>Cashier — Antarmuka POS dengan pencarian produk, keranjang, dan pembayaran</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="screenshots/transactions.png" alt="Transactions" width="700"/>
+  <br/>
+  <em>Transaksi — Riwayat transaksi dengan filter tanggal dan status</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="screenshots/detail_transaction.png" alt="Transaction Detail" width="700"/>
+  <br/>
+  <em>Detail Transaksi — Informasi lengkap transaksi, item, dan status refund</em>
+</p>
+
+<br/>
+
+<p align="center">
+  <img src="screenshots/report.png" alt="Reports" width="700"/>
+  <br/>
+  <em>Laporan — Grafik pendapatan dan laporan harian/mingguan/bulanan</em>
+</p>
 
 ## Author
 
