@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String
+  roleId    String
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  role         Role          @relation(fields: [roleId], references: [id])
+  transactions Transaction[]
+  stockMovements StockMovement[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  products Product[]
+
+  @@index([createdAt])
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  cost        Float    @default(0)
+  stock       Int      @default(0)
+  sku         String   @unique
+  barcode     String   @unique
+  categoryId  String
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  category       Category         @relation(fields: [categoryId], references: [id])
+  transactionItems TransactionItem[]
+  stockMovements   StockMovement[]
+
+  @@index([sku])
+  @@index([barcode])
+  @@index([createdAt])
+  @@map("products")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?  @unique
+  phone     String?
+  address   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  transactions Transaction[]
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("customers")
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  invoiceNumber String   @unique
+  subtotal      Float
+  tax           Float    @default(0)
+  discount      Float    @default(0)
+  total         Float
+  paymentMethod String
+  cashAmount    Float?
+  changeAmount  Float?
+  status        String   @default("PENDING")
+  customerId    String?
+  userId        String
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+
+  customer        Customer?         @relation(fields: [customerId], references: [id])
+  user            User              @relation(fields: [userId], references: [id])
+  items           TransactionItem[]
+  payments        Payment[]
+
+  @@index([invoiceNumber])
+  @@index([createdAt])
+  @@index([status])
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id            String @id @default(uuid())
+  transactionId String
+  productId     String
+  productName   String
+  quantity      Int
+  price         Float
+  subtotal      Float
+  createdAt     DateTime @default(now())
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+  product     Product     @relation(fields: [productId], references: [id])
+
+  @@index([transactionId])
+  @@index([productId])
+  @@map("transaction_items")
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  transactionId String
+  amount        Float
+  method        String
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+
+  @@index([transactionId])
+  @@map("payments")
+}
+
+model StockMovement {
+  id        String   @id @default(uuid())
+  productId String
+  type      String
+  quantity  Int
+  notes     String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@index([productId])
+  @@index([createdAt])
+  @@map("stock_movements")
+}
